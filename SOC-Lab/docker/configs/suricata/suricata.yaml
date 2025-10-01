@@ -1,0 +1,29 @@
+vars:
+  address-groups:
+    HOME_NET: "any"
+  port-groups:
+    HTTP_PORTS: "80,8080,8000,8888"
+
+default-rule-path: /etc/suricata/rules
+rule-files:
+  - suricata.rules
+  - misp.rules
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: /var/log/suricata/eve.json
+      community-id: true
+      types:
+        - alert
+        - dns
+        - http
+        - tls
+        - flow
+logging:
+  default-log-level: notice
+  outputs:
+    - file:
+        enabled: yes
+        filename: /var/log/suricata/suricata.log
