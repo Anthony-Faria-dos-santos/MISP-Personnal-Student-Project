@@ -14,7 +14,9 @@ Opinion: What was the auditor’s opinion after conducting all the testing and e
 
 [source : https://secureframe.com/blog/soc-1-vs-soc-2]
 
-
+<p align="center">
+  <img src="SOC-Lab/docs/architecture.png" alt="Architecture SOC avec MISP" width="700"/>
+</p>
 
 ---
 
@@ -276,21 +278,21 @@ sudo tcpreplay --intf1=lo seed/pcaps/phishing-example.pcap
 ```Makefile
 .PHONY: up down logs seed rules test clean
 up:
-	docker compose -f docker/docker-compose.yml --profile minimal up -d
+    docker compose -f docker/docker-compose.yml --profile minimal up -d
 full:
-	docker compose -f docker/docker-compose.yml --profile full up -d
+    docker compose -f docker/docker-compose.yml --profile full up -d
 logs:
-	docker compose -f docker/docker-compose.yml logs -f --tail=200
+    docker compose -f docker/docker-compose.yml logs -f --tail=200
 seed:
-	bash scripts/misp_ingest_sample.sh
+    bash scripts/misp_ingest_sample.sh
 rules:
-	bash scripts/misp_export_suricata.sh && docker exec -it suricata suricatasc -c reload-rules || true
+    bash scripts/misp_export_suricata.sh && docker exec -it suricata suricatasc -c reload-rules || true
 test:
-	bash scripts/seed_traffic.sh
+    bash scripts/seed_traffic.sh
 down:
-	docker compose -f docker/docker-compose.yml down
+    docker compose -f docker/docker-compose.yml down
 clean:
-	docker compose -f docker/docker-compose.yml down -v --remove-orphans
+    docker compose -f docker/docker-compose.yml down -v --remove-orphans
 ```
 
 ---
