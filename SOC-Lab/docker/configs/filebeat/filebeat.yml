@@ -1,0 +1,22 @@
+filebeat.inputs:
+  - type: filestream
+    id: suricata-eve
+    enabled: true
+    paths: ["/var/log/suricata/eve.json"]
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+
+setup.template.enabled: true
+setup.template.name: "suricata"
+setup.template.pattern: "suricata-*"
+setup.ilm.enabled: false
+
+processors:
+  - add_fields:
+      target: event
+      fields:
+        module: suricata
+
+setup.kibana:
+  host: "kibana:5601"
