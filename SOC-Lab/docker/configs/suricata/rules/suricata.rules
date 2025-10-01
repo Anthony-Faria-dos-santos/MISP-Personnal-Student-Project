@@ -1,0 +1,2 @@
+# Règle de test (DNS)
+alert dns any any -> any any (msg:"TEST DNS phishing lab"; dns.query; content:"login-secure-banque.fr"; nocase; sid:1000001; rev:1;)
