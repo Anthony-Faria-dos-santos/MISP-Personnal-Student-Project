@@ -326,10 +326,10 @@ clean:
 
 ## 15) Roadmap d’étude (estimation sur 2 ou 3 semaines selon études)
 
-* **Jour 1–2** : installation, durcissement basique, import d’un premier événement.
-* **Jour 3–4** : export IDS + alertes Suricata → dashboard Kibana.
-* **Jour 5–6** : intégration TheHive/Cortex + premiers cas.
-* **Semaine 2** : feeds publics, tagging avancé, KPIs, rapport final.
+* **1** : installation, durcissement basique, import d’un premier événement.
+* **2* : export IDS + alertes Suricata → dashboard Kibana.
+* **3** : intégration TheHive/Cortex + premiers cas.
+* **4** : feeds publics, tagging avancé, KPIs, rapport final.
 
 ---
 
@@ -362,5 +362,3 @@ clean:
 * Fournir un 2ᵉ dataset (malvertising, C2) et comparer la couverture ATT&CK.
 
 ---
-
-**Bon labo !** N’hésite pas à versionner chaque étape et à documenter ce que tu observes : c’est la clé d’un projet SOC crédible et valorisable en alternance.
