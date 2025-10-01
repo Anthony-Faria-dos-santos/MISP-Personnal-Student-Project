@@ -1,0 +1,55 @@
+{
+  "Event": {
+    "info": "Phishing - scénario labo (synthetic, safe)",
+    "threat_level_id": 3,
+    "analysis": 0,
+    "distribution": 0,
+    "date": "2025-10-01",
+    "Attribute": [
+      {
+        "type": "url",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "http://login-secure-banque.example-lab/auth"
+      },
+      {
+        "type": "domain",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "login-secure-banque.example-lab"
+      },
+      {
+        "type": "ip-dst",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "198.51.100.42"
+      },
+      {
+        "type": "email-src",
+        "category": "Payload delivery",
+        "to_ids": true,
+        "value": "no-reply@notif-secure.example-lab"
+      },
+      {
+        "type": "attachment",
+        "category": "Payload delivery",
+        "to_ids": true,
+        "value": "invoice-sept-2025.pdf (sha256:1111111111111111111111111111111111111111111111111111111111111111)"
+      },
+      {
+        "type": "comment",
+        "category": "Internal reference",
+        "to_ids": false,
+        "value": "TLP:GREEN; scénario labo pour tests de détection"
+      }
+    ],
+    "Tag": [
+      {
+        "name": "tlp:green"
+      },
+      {
+        "name": "misp-galaxy:attack-pattern=Phishing (T1566)"
+      }
+    ]
+  }
+}
