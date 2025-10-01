@@ -14,7 +14,9 @@ Opinion: What was the auditor’s opinion after conducting all the testing and e
 
 [source : https://secureframe.com/blog/soc-1-vs-soc-2]
 
-
+<p align="center">
+  <img src="docs/architecture.png" alt="Architecture SOC avec MISP" width="700"/>
+</p>
 
 ---
 
