@@ -1,0 +1,106 @@
+version: "3.9"
+
+name: ${PROJECT_NAME}
+
+networks:
+  socnet: {}
+
+volumes:
+  elastic-data: {}
+  misp-data: {}
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "${ELASTIC_PORT}:9200"
+    networks: [socnet]
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    profiles: [minimal, full]
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    depends_on: [elasticsearch]
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "${KIBANA_PORT}:5601"
+    networks: [socnet]
+    profiles: [minimal, full]
+
+  misp:
+    image: ${MISP_IMAGE}
+    hostname: misp
+    environment:
+      - MISP_FQDN=${MISP_FQDN}
+      - MISP_ADMIN_EMAIL=${MISP_ADMIN_EMAIL}
+      - MISP_ADMIN_PASSWORD=${MISP_ADMIN_PASS}
+      - MISP_BASEURL=https://${MISP_FQDN}:${MISP_HTTPS_PORT}
+      - SELF_SIGNED=true
+    ports:
+      - "${MISP_HTTPS_PORT}:443"
+    networks: [socnet]
+    volumes:
+      - misp-data:/var/lib/misp
+    profiles: [minimal, full]
+
+  suricata:
+    image: ${SURICATA_IMAGE}
+    command: ["-i", "eth0"]
+    cap_add: ["NET_ADMIN", "NET_RAW"]
+    networks: [socnet]
+    volumes:
+      - ./docker/configs/suricata/suricata.yaml:/etc/suricata/suricata.yaml:ro
+      - ./docker/configs/suricata/rules:/etc/suricata/rules
+      - ${SURICATA_LOG_DIR}:/var/log/suricata
+    depends_on: [elasticsearch]
+    profiles: [minimal, full]
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:${FILEBEAT_VERSION}
+    user: root
+    depends_on: [elasticsearch]
+    networks: [socnet]
+    volumes:
+      - ./docker/configs/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ${SURICATA_LOG_DIR}:/var/log/suricata:ro
+    command: ["--strict.perms=false"]
+    profiles: [minimal, full]
+
+  thehive:
+    image: ${THEHIVE_IMAGE}
+    depends_on: [elasticsearch]
+    environment:
+      - TH_HOSTNAME=thehive
+      - CLUSTER_NAME=soc-lab
+      - storage.local.root=/opt/thehive/data
+      - elasticsearch.hosts.0=http://elasticsearch:9200
+    ports:
+      - "${THEHIVE_PORT}:9000"
+    networks: [socnet]
+    volumes:
+      - ./data/thehive:/opt/thehive/data
+    profiles: [full]
+
+  cortex:
+    image: ${CORTEX_IMAGE}
+    depends_on: [elasticsearch]
+    environment:
+      - JOB_DIRECTORY=/opt/cortex/jobs
+      - DB_URL=jdbc:sqlite:/opt/cortex/data/cortex.db
+      - CORTEX_HTTP_PORT=9001
+    ports:
+      - "${CORTEX_PORT}:9001"
+    networks: [socnet]
+    volumes:
+      - ./data/cortex:/opt/cortex/data
+    profiles: [full]
